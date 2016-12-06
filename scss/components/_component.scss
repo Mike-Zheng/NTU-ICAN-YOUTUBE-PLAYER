@@ -1,0 +1,41 @@
+.search.miz {
+    position: relative;
+    .search-bar {
+        height: 40px;
+        width: 400px;
+        border-radius: 10em;
+        border: 0;
+        font-size: 22px;
+        padding-left: 15px;
+        &:focus {
+            outline: none;
+        }
+    }
+    .search-button {
+        position: absolute;
+        top: 5px;
+        right: 5px;
+        border-radius: 100%;
+        height: 30px;
+        width: 30px;
+        border: 0;
+        color: #FFF;
+        background-color: $color_main;
+        @include transition(all 50ms ease-out);
+        &::-moz-focus-inner {
+            border: 0;
+            padding: 0;
+        }
+        &:focus {
+            outline: none;
+        }
+        &:hover {
+            background-color: $color_select;
+            // i {
+            //     color: #56ADFC;
+            // }
+        }
+    }
+}
+
+

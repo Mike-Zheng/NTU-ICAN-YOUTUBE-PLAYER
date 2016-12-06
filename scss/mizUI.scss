@@ -1,0 +1,372 @@
+/*! Copyright MizTech
+ *  Licensed MikeZheng
+ *  http: //mike-zheng.github.io/
+ *             _   _____         _     
+ *            (_) |_   _|       | |    
+ *   _ __ ___  _ ___| | ___  ___| |__  
+ *  | '_ ` _ \| |_  / |/ _ \/ __| '_ \ 
+ *  | | | | | | |/ /| |  __/ (__| | | |
+ *  |_| |_| |_|_/___\_/\___|\___|_| |_|
+ *                 mike-zheng.github.io
+ */
+
+// @font-face {
+//   font-family: 'cwTeXHei';
+//   font-style: normal;
+//   font-weight: 500;
+//   src: url(//fonts.gstatic.com/ea/cwtexhei/v3/cwTeXHei-zhonly.eot);
+//   src: url(//fonts.gstatic.com/ea/cwtexhei/v3/cwTeXHei-zhonly.eot?#iefix) format('embedded-opentype'),
+//        url(//fonts.gstatic.com/ea/cwtexhei/v3/cwTeXHei-zhonly.woff2) format('woff2'),
+//        url(//fonts.gstatic.com/ea/cwtexhei/v3/cwTeXHei-zhonly.woff) format('woff'),
+//        url(//fonts.gstatic.com/ea/cwtexhei/v3/cwTeXHei-zhonly.ttf) format('truetype');
+//         //
+// }
+// @include pc-width{}
+// @include pad-width() {}
+// @include small-pad-width() {}
+// @include phone-width() {}
+// @include box-shadow(
+//     0 1px 4px rgba(0,0,0,0.3),
+//     0 0 40px rgba(0,0,0,0.1) inset
+//  );
+// @include transition();
+$color_main: #313741;
+$color_select: #56ADFC;
+$color_meta: #292F39;
+$color_font: #8B8B91;
+$white:#FFF;
+// mikzUI
+// 2016
+//vendor
+@import "vendor/font-awesome";
+@import "vendor/flexboxgrid";
+@import "vendor/hint";
+// 函式
+@import 'libs/mixins';
+// 基本設定
+@import 'base/rwd';
+// @import 'base/page';
+// @import 'base/article';
+// 版型
+// @import 'layout/';
+// 元件
+@import 'components/component';
+body {
+    background-color: #EFEFEF;
+    font-family: "cwTeXHei", "Open Sans", "Lato", "Helvetica Neue", Helvetica, Arial, "PingFang TC", "PingFang SC", "STHeiti", "微軟正黑體", "Microsoft Yahei", sans-serif;
+    overflow: hidden;
+}
+
+
+/*!
+ * MizUI v1.0.0 
+ * Copyright MizTech
+ * Licensed MikeZheng
+ * http://mike-zheng.github.io/
+ */
+
+@import url(http://fonts.googleapis.com/css?family=Source+Sans+Pro:400,600,700);
+body {
+    background-color: #ECEFF2;
+    // padding: 60px 20px;
+    font-family: "Source Sans Pro", "Open Sans", Lato, "Helvetica Neue", Helvetica, Arial, "PingFang TC", "PingFang SC", STHeiti, 微軟正黑體, "Microsoft Yahei", sans-serif;
+    margin: 0px;
+    color: #343942;
+    // overflow:none;
+}
+
+.miz-player {
+    position: absolute;
+    width: 500px;
+    height: 100%;
+    border-right: 1px #979797 solid;
+    float: left;
+    top: 0;
+    bottom: 0;
+    background-color: $color_main;
+    // @include pc-width{}
+    // @include pad-width() {}
+    // @include small-pad-width() {}
+    @include phone-width() {
+        width: 100%;
+    }
+}
+
+.search-area {
+    position: relative;
+    height: 100px;
+    width: 500px;
+    // @include pc-width{}
+    // @include pad-width() {}
+    // @include small-pad-width() {}
+    @include phone-width() {
+        width: 100%;
+    }
+    background-color: $color_main;
+    border-bottom: 1px #979797 solid;
+}
+
+.search-container {
+    position: absolute;
+    left: 50%;
+    transform: translateX(-50%);
+    padding: 30px 0;
+}
+
+.tools {
+    background-color: $color_meta;
+    height: 40px;
+    border-bottom: 1px #979797 solid;
+    ul {
+        padding: 0;
+        margin: 0;
+        height: 100%;
+        text-align: end;
+        li {
+            cursor: pointer;
+            height: 100%;
+            color: #8B8B91;
+            display: inline-block;
+            padding: 0 20px;
+            line-height: 40px;
+            @include transition(color 100ms ease-in);
+            i {
+                padding-right: 5px;
+            }
+            &:hover {
+                color: $white;
+            }
+        }
+    }
+}
+
+.music-cards {
+    background-color: $color_main;
+    // height: 40px;
+    ul {
+        padding: 0;
+        margin: 0;
+        // height: 100%;
+        height: calc(100vh - 180px);
+        overflow-y: scroll;
+        &::-webkit-scrollbar {
+            width: 9px;
+            height: 9px;
+            background-color: #000;
+            // border-radius:2px;
+            // border:1px #c0c0c0 solid;
+        }
+        &::-webkit-scrollbar-track {
+            background-color: $color_meta;
+        }
+        &::-webkit-scrollbar-thumb {
+            background-color: #c0c0c0;
+             -webkit-border-radius: 10px;
+    border-radius: 10px;
+    // background: rgba(255,0,0,0.8); 
+    @include box-shadow(inset 1px 0 4px rgba(0,0,0,0.1)); 
+        }
+        li {
+            // height: 100%;
+            color: #8B8B91;
+            // display: inline-block;
+            // padding: 0 20px;
+            line-height: 40px;
+            @include transition(color 100ms ease-in);
+            // &:hover {
+            //     color: $white;
+            // }
+        }
+    }
+}
+
+.music-card {
+    .card-line {
+        cursor: pointer;
+        position: relative;
+        width: 100%;
+        height: 100%;
+        @include transition(color 100ms ease-in);
+        &:hover {
+            background-color: $color_select;
+            .music-icon {
+                i {
+                    color: $white;
+                }
+            }
+            .title {
+                h4 {
+                    color: $white;
+                }
+            }
+            .card-tools {
+                .tool {
+                    i {
+                        color: $white;
+                    }
+                    .circle {
+                        background-color: $white;
+                        i {
+                            color: $color_select;
+                        }
+                    }
+                }
+            }
+        }
+        .music-icon {
+            width: 60px;
+            height: 100%;
+            line-height: 60px;
+            text-align: center;
+            display: inline-block;
+            float: left;
+            i {
+                font-size: 20px;
+                color: #C0C0C0;
+            }
+        }
+        .title {
+            display: inline-block;
+            width: 50%;
+            // height: 100%;
+            line-height: 60px;
+            height: 60px;
+            overflow: hidden;
+            h4 {
+                padding: 0;
+                margin: 0;
+            }
+        }
+        .card-tools {
+            display: inline-block;
+            position: absolute;
+            right: 0;
+            // width: 160px;
+            height: 100%;
+            .tool {
+                vertical-align: middle;
+                display: inline-block;
+                height: 100%;
+                line-height: 60px;
+                width: 50px;
+                margin: 0;
+                text-align: center;
+                i {
+                    font-size: 25px;
+                    color: #C0C0C0;
+                    vertical-align: middle;
+                    &:hover,
+                    &.act {
+                        color: #FDBA1C;
+                    }
+                }
+                .circle {
+                    display: inline-block;
+                    height: 30px;
+                    background-color: #c0c0c0;
+                    width: 30px;
+                    border-radius: 100%;
+                    vertical-align: middle;
+                    line-height: 30px;
+                    i {
+                        font-size: 16px;
+                        color: $color_main;
+                    }
+                    &:hover,
+                    &.act {
+                        background-color: #FDBA1C;
+                    }
+                }
+            }
+        }
+        .underline {
+            border-bottom: 1px #979797 solid;
+            width: 90%;
+            float: right;
+        }
+    }
+    &.active {
+        .card-line {
+            background-color: $color_meta;
+            .music-icon {
+                i {
+                    color: $white;
+                }
+            }
+            .title {
+                h4 {
+                    color: $white;
+                }
+            }
+            // .card-tools {
+            //     .tool {
+            //         i {
+            //             color: $white;
+            //         }
+            //         .circle {
+            //             background-color: $white;
+            //             i {
+            //                 color: $color_select;
+            //             }
+            //         }
+            //     }
+            // }
+        }
+        .card-info {
+            display: block;
+        }
+    }
+    .card-info {
+        display: none;
+        padding: 10px;
+        .card-info-container {
+            border: 1px #979797 solid;
+            height: 200px;
+            .card-image {
+                height: 200px;
+                width: 50%;
+                /* padding: 27px; */
+                /* border: #FFF solid 20px; */
+                box-shadow: inset 0 0 40px 0px #313741;
+                display: inline-block;
+                background-repeat: no-repeat;
+                background-position: center;
+                background-size: cover;
+                float: left;
+                &:hover {
+                    box-shadow: none;
+                }
+            }
+            .card-content {
+                display: inline-block;
+                width: 50%;
+                height: 200px;
+                overflow: hidden;
+                h4 {
+                    margin: 0px 10px;
+                }
+                p {
+                    font-size: 14px;
+                    margin: 10px 10px;
+                    line-height: 20px;
+                    word-break: break-word;
+                    word-wrap: break-word;
+                    word-spacing: 3px;
+                }
+            }
+        }
+    }
+}
+
+.tool-footer {
+    height: 40px;
+    background-color: $color_meta;
+    color: #c0c0c0;
+    line-height: 40px;
+    padding: 0 20px;
+    font-size: 14px;
+    text-align: end;
+    i {
+        font-size: 14px;
+    }
+}
