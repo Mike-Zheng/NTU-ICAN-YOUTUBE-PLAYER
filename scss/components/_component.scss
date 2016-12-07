@@ -7,15 +7,55 @@
         border: 0;
         font-size: 22px;
         padding-left: 15px;
-
-         // @include pc-width{}
-            // @include pad-width() {}
-            // @include small-pad-width() {}
-            @include phone-width() {
-                width: calc(100vw - 100px);
-            }
+        // @include pc-width{}
+        // @include pad-width() {}
+        // @include small-pad-width() {}
+        @include phone-width() {
+            width: calc(100vw - 100px);
+        }
         &:focus {
             outline: none;
+            // padding-left:50px;
+            &::-webkit-input-placeholder {
+                padding-left: 10px;
+            }
+            &::-moz-placeholder {
+                padding-left: 10px;
+            }
+            &:-ms-input-placeholder {
+                padding-left: 10px;
+            }
+            &:-moz-placeholder {
+                padding-left: 10px;
+            }
+        }
+        &::-webkit-input-placeholder {
+            /* Chrome/Opera/Safari */
+            @include transition(padding 200ms ease-in);
+            color: #c0c0c0;
+            padding-left: calc(50% - 60px);
+            font-weight: 400;
+        }
+        &::-moz-placeholder {
+            /* Firefox 19+ */
+            @include transition(padding 200ms ease-in);
+            color: #c0c0c0;
+            padding-left: calc(50% - 60px);
+            font-weight: 400;
+        }
+        &:-ms-input-placeholder {
+            /* IE 10+ */
+            @include transition(padding 200ms ease-in);
+            color: #c0c0c0;
+            padding-left: calc(50% - 60px);
+            font-weight: 400;
+        }
+        &:-moz-placeholder {
+            /* Firefox 18- */
+            @include transition(padding 200ms ease-in);
+            color: #c0c0c0;
+            padding-left: calc(50% - 60px);
+            font-weight: 400;
         }
     }
     .search-button {
@@ -44,5 +84,3 @@
         }
     }
 }
-
-

@@ -58,7 +58,15 @@ app.controller("MusicPlayerController", function($scope, $timeout, $location, $h
     // }];
 
     $scope.init = function() {
-        loadSearch();
+        $scope.musicLists = loadSearch();
+        var favoriteLists = loadFavorite();
+        if (favoriteLists)
+            $scope.musicLists.forEach(function(m, i) {
+                favoriteLists.forEach(function(f, j) {
+                    if (m._id == f._id) m.isFavorite = true;
+                });
+            });
+
     }
 
 
@@ -98,8 +106,7 @@ app.controller("MusicPlayerController", function($scope, $timeout, $location, $h
     function loadSearch() {
         console.log("讀取上次搜尋狀態..");
         if (localStorageService.isSupported) {
-            $scope.musicLists = getLocalStorge('NTU-ICAN-PLAYER-SEARCH');
-            console.log("讀取成功!");
+            return getLocalStorge('NTU-ICAN-PLAYER-SEARCH');
         }
 
 
@@ -128,8 +135,33 @@ app.controller("MusicPlayerController", function($scope, $timeout, $location, $h
         event.preventDefault();
         event.stopPropagation();
         musicCard.isFavorite = !musicCard.isFavorite;
+        // saveSearch($scope.musicLists);
 
 
+        var favoriteLists = $scope.musicLists.filter(function(m) {
+            if (m.isFavorite)
+                return m;
+            else
+                return 0;
+        });
+        saveFavorite(favoriteLists);
+
+
+
+    }
+
+    function loadFavorite() {
+        if (localStorageService.isSupported) {
+            return getLocalStorge('NTU-ICAN-PLAYER-FAVORITE');
+        }
+    }
+
+    function saveFavorite(musicLists) {
+
+        if (localStorageService.isSupported) {
+
+            setLocalStorge('NTU-ICAN-PLAYER-FAVORITE', musicLists)
+        }
 
 
     }

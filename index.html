@@ -41,7 +41,7 @@
         <div class="search-area">
             <div class="search-container">
                 <div class="miz search">
-                    <input id="queryInput" class="search-bar" type="text" ng-model="searchQuery" press-enter="search(searchQuery)">
+                    <input id="queryInput" placeholder="搜尋關鍵字" class="search-bar" type="text" ng-model="searchQuery" press-enter="search(searchQuery)">
                     <button id="searchButton" class="search-button" ng-click="search(searchQuery)">
                         <i class="fa fa-search" aria-hidden="true"></i>
                     </button>
@@ -84,7 +84,7 @@
                             </div>
                             <div class="underline clearfix"></div>
                         </div>
-                        <div class="card-info" ng-if="musicCard.isSelect">
+                        <div class="card-info" ng-show="musicCard.isSelect" ng-class="{'show':musicCard.isSelect}">
                             <div class="card-info-container">
                                 <div class="card-image" style="background-image: url({{musicCard.image}})"></div>
                                 <div class="card-content">
@@ -104,6 +104,10 @@
                 <i class="fa fa-circle-o-notch fa-spin fa-3x fa-fw"></i>
                 <span class="sr-only">搜尋中...</span></div>
         </div>
+    </div>
+    <div class="miz-main">
+        <div class="myfavorite-container"></div>
+        <div class="video-container"></div>
     </div>
 </body>
 
