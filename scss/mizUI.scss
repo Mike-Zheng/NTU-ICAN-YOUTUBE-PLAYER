@@ -10,17 +10,15 @@
  *                 mike-zheng.github.io
  */
 
-// @font-face {
-//   font-family: 'cwTeXHei';
-//   font-style: normal;
-//   font-weight: 500;
-//   src: url(//fonts.gstatic.com/ea/cwtexhei/v3/cwTeXHei-zhonly.eot);
-//   src: url(//fonts.gstatic.com/ea/cwtexhei/v3/cwTeXHei-zhonly.eot?#iefix) format('embedded-opentype'),
-//        url(//fonts.gstatic.com/ea/cwtexhei/v3/cwTeXHei-zhonly.woff2) format('woff2'),
-//        url(//fonts.gstatic.com/ea/cwtexhei/v3/cwTeXHei-zhonly.woff) format('woff'),
-//        url(//fonts.gstatic.com/ea/cwtexhei/v3/cwTeXHei-zhonly.ttf) format('truetype');
-//         //
-// }
+@font-face {
+    font-family: 'cwTeXHei';
+    font-style: normal;
+    font-weight: 500;
+    src: url(https://fonts.gstatic.com/ea/cwtexhei/v3/cwTeXHei-zhonly.eot);
+    src: url(https://fonts.gstatic.com/ea/cwtexhei/v3/cwTeXHei-zhonly.eot?#iefix) format('embedded-opentype'), url(https://fonts.gstatic.com/ea/cwtexhei/v3/cwTeXHei-zhonly.woff2) format('woff2'), url(https://fonts.gstatic.com/ea/cwtexhei/v3/cwTeXHei-zhonly.woff) format('woff'), url(https://fonts.gstatic.com/ea/cwtexhei/v3/cwTeXHei-zhonly.ttf) format('truetype');
+    //
+}
+
 // @include pc-width{}
 // @include pad-width() {}
 // @include small-pad-width() {}
@@ -65,7 +63,7 @@ body {
  * http://mike-zheng.github.io/
  */
 
-@import url(http://fonts.googleapis.com/css?family=Source+Sans+Pro:400,600,700);
+@import url(https://fonts.googleapis.com/css?family=Source+Sans+Pro:400,600,700);
 body {
     background-color: #ECEFF2;
     // padding: 60px 20px;
@@ -143,6 +141,16 @@ body {
 .music-cards {
     background-color: $color_main;
     // height: 40px;
+    .spin {
+        width: 100%;
+        text-align: center;
+        line-height: calc(100vh - 180px);
+        height: calc(100vh - 180px);
+        i {
+            color: #c0c0c0;
+            font-size: 50px;
+        }
+    }
     ul {
         padding: 0;
         margin: 0;
@@ -264,7 +272,7 @@ body {
                     color: #C0C0C0;
                     vertical-align: middle;
                     &:hover,
-                    &.act {
+                    &.favorite {
                         color: #FDBA1C;
                     }
                 }
@@ -322,12 +330,20 @@ body {
             // }
         }
         .card-info {
-            display: block;
+            // display: block;
+            visibility: visible;
+            opacity: 1;
+            transition-delay: 0s;
         }
     }
     .card-info {
-        display: none;
         padding: 10px;
+        transform-origin: top;
+        // display: none;
+        // @include transition(top 300ms cubic-bezier(0.17, 0.04, 0.03, 0.94));
+        visibility: hidden;
+        opacity: 0;
+        transition: visibility 0s linear 0.5s, opacity 0.5s linear;
         .card-info-container {
             border: 1px #979797 solid;
             height: 200px;

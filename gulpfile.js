@@ -43,7 +43,7 @@ gulp.task('sass', ['clean'], function() {
 //Js壓縮任務
 gulp.task('mizjs', ['clean'], function() {
     return gulp.src(['./prejs/**.js'])
-        .pipe(uglify({output: {comments: /^!|@preserve|@license|@cc_on/i}}))
+        //.pipe(uglify({output: {comments: /^!|@preserve|@license|@cc_on/i}}))
         .pipe(sourcemaps.init())
         .pipe(concat('mizUI.js'))
         .pipe(sourcemaps.write())
