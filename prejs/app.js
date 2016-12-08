@@ -1,4 +1,4 @@
-var app = angular.module("ntuApp", ['LocalStorageModule', 'angular-marquee', 'youtube-embed']);
+var app = angular.module("ntuApp", ['mgo-mousetrap', 'LocalStorageModule', 'angular-marquee', 'youtube-embed', 'rzModule']);
 
 
 app.config(function(localStorageServiceProvider) {
@@ -26,6 +26,7 @@ app.controller("MusicPlayerController", function($scope, $timeout, $location, $h
     $scope.currentYoutubeVideo = undefined;
     $scope.isFavoriteMode = false;
     $scope.favoriteLists = [];
+    $scope.labMode = false;
 
     //標題跑馬燈 Marquee
     $scope.duration = 10000;
@@ -45,6 +46,29 @@ app.controller("MusicPlayerController", function($scope, $timeout, $location, $h
     };
 
 
+
+    //$scope.priceSlider = 150;
+    $scope.slider = {
+        value: 50,
+        options: {
+            id: 'ntu-id',
+            floor: 0,
+            ceil: 100,
+            showSelectionBar: true,
+            hidePointerLabels: true,
+            hidePointerLabels: true,
+            hideLimitLabels: true,
+            // showSelectionBarFromValue: true,
+            onChange: function(id, value) {
+                console.log('on change ' + value);
+                PlayerFactory.setVolume(value).then(function(data) {
+                    console.log(data);
+                });
+            }
+        }
+    };
+
+
     $scope.init = function() {
         $scope.musicLists = loadSearch();
         var favoriteLists = loadFavorite();
@@ -57,6 +81,35 @@ app.controller("MusicPlayerController", function($scope, $timeout, $location, $h
             });
         addMarquee($scope.musicLists);
 
+
+
+        if ($scope.labMode) {
+            //實驗室模式
+            //讀取音量
+            PlayerFactory.loadVolume(value).then(function(data) {
+                console.log(data);
+                $scope.slider.value = data;
+            });
+
+        }
+
+    }
+
+
+    $scope.switchLabMode = function(event) {
+        event.preventDefault();
+        console.log("WELCOME TO NTU ICAN LAB!")
+        $scope.labMode = !$scope.labMode;
+
+        if ($scope.labMode) {
+            //實驗室模式
+            //讀取音量
+            PlayerFactory.loadVolume(value).then(function(data) {
+                console.log(data);
+                $scope.slider.value = data;
+            });
+
+        }
     }
 
     $scope.switchFavorite = function() {
@@ -69,6 +122,19 @@ app.controller("MusicPlayerController", function($scope, $timeout, $location, $h
             $scope.init();
         }
 
+    }
+
+
+    $scope.labPause = function() {
+        PlayerFactory.pause().then(function(data) {
+            console.log(data);
+        });
+    }
+
+    $scope.labStop = function() {
+        PlayerFactory.play("").then(function(data) {
+            console.log(data);
+        });
     }
 
     $scope.search = function(query) {
@@ -256,15 +322,27 @@ app.controller("MusicPlayerController", function($scope, $timeout, $location, $h
 app.factory('PlayerFactory', function($q, $http) {
 
     var _factory = {};
-    _factory.listInvites = function(projectId) {
-        return $http.get("/api/invite/list-invites?projectId=" + projectId);
+    _factory.play = function(id) {
+        return $http.get("http://140.112.26.236:80/music?id=" + id);
+    };
+    _factory.loadVolume = function() {
+        return $http.get("http://140.112.26.236:80/get_volume");
+    };
+    _factory.setVolume = function(range) {
+        return $http.get("http://140.112.26.236:80/set_volume?volume=" + range);
+    };
+    _factory.pause = function() {
+        return $http.get("http://140.112.26.236:80/pause_and_play");
     };
 
-    _factory.acceptInivte = function(inviteId) {
-        return $http.post("/api/invite/accept", {
-            id: inviteId
-        });
-    };
+
+    // _factory.acceptInivte = function(inviteId) {
+    //     return $http.post("/api/invite/accept", {
+    //         id: inviteId
+    //     });
+    // };
+
+
 
     return _factory;
 });

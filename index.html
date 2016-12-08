@@ -37,7 +37,7 @@
     <script src="js/mizUI.js"></script>
 </head>
 
-<body ng-controller="MusicPlayerController">
+<body ng-controller="MusicPlayerController"  w-mousetrap="{'i+c+a+n': switchLabMode}">
     <div class="miz-player" ng-init="init()">
         <div class="search-area">
             <div class="search-container">
@@ -56,10 +56,27 @@
             </ul>
         </div>
         <div class="music-cards">
-            <div class="spin" ng-if="searching">
+            <div class="lab-tool" ng-if="labMode">
+                <div class="lab-buttons-container">
+                    <div class="lab-buttons">
+                        <div class="left-button" ng-click="labPause()"> <i class="fa fa-pause" aria-hidden="true"></i></div>
+                        |
+                        <div class="right-button" ng-click="labStop()"><i class="fa fa-stop" aria-hidden="true"></i></div>
+                    </div>
+                </div>
+                <div class="volume-container">
+                    <div class="left clearfix"><i class="fa fa-volume-off" aria-hidden="true"></i></div>
+                    <div class="center clearfix">
+                        <!-- <input type="range"> -->
+                        <rzslider rz-slider-model="slider.value" rz-slider-options="slider.options"></rzslider>
+                    </div>
+                    <div class="right clearfix"><i class="fa fa-volume-up" aria-hidden="true"></i></div>
+                </div>
+            </div>
+            <div class="spin" ng-if="searching" ng-class="{'lab-mode':labMode}">
                 <i class="fa fa-circle-o-notch fa-spin fa-3x fa-fw"></i>
             </div>
-            <ul ng-if="!searching">
+            <ul ng-if="!searching" ng-class="{'lab-mode':labMode}">
                 <li ng-repeat="musicCard in musicLists" ng-click="selectMusicCard(musicCard)">
                     <div class="music-card " ng-class="{'active':musicCard.isSelect}">
                         <div class="card-line" ng-mouseenter="musicCard.marquee.scroll=true;" ng-mouseleave="musicCard.marquee.scroll=false;">
@@ -108,7 +125,7 @@
         </div>
     </div>
     <div class="miz-main">
-        <div  class="video-container">
+        <div class="video-container">
             <div class="video">
                 <youtube-video player-vars="playerVars" video-id="currentYoutubeVideo" player="VideoPlayer" player-width="'100%'" player-height="'100%'"></youtube-video>
             </div>
