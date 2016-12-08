@@ -62,7 +62,7 @@ app.controller("MusicPlayerController", function($scope, $timeout, $location, $h
             onChange: function(id, value) {
                 console.log('on change ' + value);
                 PlayerFactory.setVolume(value).then(function(data) {
-                    console.log(data);
+                    console.log(data.data);
                 });
             }
         }
@@ -88,8 +88,8 @@ app.controller("MusicPlayerController", function($scope, $timeout, $location, $h
             //實驗室模式
             //讀取音量
             PlayerFactory.loadVolume().then(function(data) {
-                console.log(data);
-                $scope.slider.value = data;
+                console.log(data.data);
+                $scope.slider.value = data.data;
             });
 
         }
@@ -106,8 +106,8 @@ app.controller("MusicPlayerController", function($scope, $timeout, $location, $h
             //實驗室模式
             //讀取音量
             PlayerFactory.loadVolume().then(function(data) {
-                console.log(data);
-                $scope.slider.value = data;
+                console.log(data.data);
+                $scope.slider.value = data.data;
             });
 
         }
@@ -128,13 +128,13 @@ app.controller("MusicPlayerController", function($scope, $timeout, $location, $h
 
     $scope.labPause = function() {
         PlayerFactory.pause().then(function(data) {
-            console.log(data);
+            console.log(data.data);
         });
     }
 
     $scope.labStop = function() {
         PlayerFactory.play("").then(function(data) {
-            console.log(data);
+            console.log(data.data);
         });
     }
 
@@ -283,7 +283,9 @@ app.controller("MusicPlayerController", function($scope, $timeout, $location, $h
         event.stopPropagation();
 
 
-
+        PlayerFactory.play(musicCard._id).then(function(data) {
+            console.log(data.data);
+        });
         // console.log(musicCard);
 
     }
