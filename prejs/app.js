@@ -32,7 +32,7 @@ app.controller("MusicPlayerController", function($scope, $timeout, $location, $h
     $scope.duration = 10000;
 
     function addMarquee(musicLists) {
-        if (musicLists.length > 0)
+        if (musicLists && musicLists.length > 0)
             musicLists.forEach(function(m, i) {
                 m.marquee = { scroll: false };
 
