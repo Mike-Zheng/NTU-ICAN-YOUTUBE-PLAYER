@@ -61,10 +61,11 @@
             <ul ng-if="!searching">
                 <li ng-repeat="musicCard in musicLists" ng-click="selectMusicCard(musicCard)">
                     <div class="music-card " ng-class="{'active':musicCard.isSelect}">
-                        <div class="card-line">
+                        <div class="card-line" ng-mouseenter="musicCard.marquee.scroll=true;" ng-mouseleave="musicCard.marquee.scroll=false;">
                             <div class="music-icon clearfix"><i class="fa fa-music" aria-hidden="true"></i></div>
-                            <div class="title clearfix ">
-                                <h4 class="hint--top" aria-label="{{musicCard.title}}">{{musicCard.title}}</h4>
+                            <div class="title clearfix">
+                                <!-- <h4 class="hint--top" aria-label="{{musicCard.title}}">{{musicCard.title}}</h4> -->
+                                <div angular-marquee class="title-name" scroll="musicCard.marquee.scroll" duration="duration">{{musicCard.title}}</div>
                             </div>
                             <div class="card-tools">
                                 <div class="tool hint--left" aria-label="Add to my favorite lists." ng-click="addToMyFavorite($event,musicCard)">
@@ -107,7 +108,9 @@
     </div>
     <div class="miz-main">
         <div class="myfavorite-container"></div>
-        <div class="video-container"></div>
+        <div class="video-container">
+            <youtube-video video-id="theBestVideo"></youtube-video>
+        </div>
     </div>
 </body>
 

@@ -1,4 +1,4 @@
-var app = angular.module("ntuApp", ['LocalStorageModule']);
+var app = angular.module("ntuApp", ['LocalStorageModule', 'angular-marquee']);
 
 
 app.config(function(localStorageServiceProvider) {
@@ -23,6 +23,21 @@ app.controller("MusicPlayerController", function($scope, $timeout, $location, $h
     $scope.searching = false;
     $scope.musicLists = [];
     $scope.searchQuery = "";
+
+
+    //Marquee
+
+    $scope.duration = 10000;
+
+    function addMarquee(musicLists) {
+        if (musicLists.length > 0)
+            musicLists.forEach(function(m, i) {
+                m.marquee.scroll = false;
+
+            });
+    }
+
+
     // $scope.musicLists = [{
     //     _id: "i5LOV6r45i8",
     //     title: "【ALIVE Live Session】滅火器－基隆路",
@@ -66,6 +81,7 @@ app.controller("MusicPlayerController", function($scope, $timeout, $location, $h
                     if (m._id == f._id) m.isFavorite = true;
                 });
             });
+        addMarquee($scope.musicLists);
 
     }
 
@@ -97,6 +113,7 @@ app.controller("MusicPlayerController", function($scope, $timeout, $location, $h
             }
             $scope.searching = false;
             saveSearch($scope.musicLists);
+            addMarquee($scope.musicLists);
         });
 
 
