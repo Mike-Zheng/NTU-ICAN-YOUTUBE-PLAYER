@@ -86,7 +86,7 @@ app.controller("MusicPlayerController", function($scope, $timeout, $location, $h
         if ($scope.labMode) {
             //實驗室模式
             //讀取音量
-            PlayerFactory.loadVolume(value).then(function(data) {
+            PlayerFactory.loadVolume().then(function(data) {
                 console.log(data);
                 $scope.slider.value = data;
             });
