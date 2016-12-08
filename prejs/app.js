@@ -1,4 +1,4 @@
-var app = angular.module("ntuApp", ['LocalStorageModule', 'angular-marquee']);
+var app = angular.module("ntuApp", ['LocalStorageModule', 'angular-marquee', 'youtube-embed']);
 
 
 app.config(function(localStorageServiceProvider) {
@@ -23,10 +23,11 @@ app.controller("MusicPlayerController", function($scope, $timeout, $location, $h
     $scope.searching = false;
     $scope.musicLists = [];
     $scope.searchQuery = "";
+    $scope.currentYoutubeVideo = undefined;
+    $scope.isFavoriteMode = false;
+    $scope.favoriteLists = [];
 
-
-    //Marquee
-
+    //標題跑馬燈 Marquee
     $scope.duration = 10000;
 
     function addMarquee(musicLists) {
@@ -37,44 +38,17 @@ app.controller("MusicPlayerController", function($scope, $timeout, $location, $h
             });
     }
 
+    //youtube
+    $scope.playerVars = {
+        controls: 0,
+        autoplay: 1
+    };
 
-    // $scope.musicLists = [{
-    //     _id: "i5LOV6r45i8",
-    //     title: "【ALIVE Live Session】滅火器－基隆路",
-    //     url: "https://www.youtube.com/embed/i5LOV6r45i8",
-    //     image: "http://img.youtube.com/vi/i5LOV6r45i8/0.jpg",
-    //     description: "聽說，今天發佈的是新歌。 聽說，滅火器在【ALIVE系列演唱會】會披露【更多新歌】 4/1晚上8點@Legacy Taipei，一定要來！ 啟售時間預計2月中下旬公布...",
-    //     isSelect: false,
-    //     isFavorite: false
-    // }, {
-    //     _id: "i5LOV6r45i8",
-    //     title: "【ALIVE Live Session】滅火器－基隆路",
-    //     url: "https://www.youtube.com/embed/i5LOV6r45i8",
-    //     image: "http://img.youtube.com/vi/i5LOV6r45i8/0.jpg",
-    //     description: "聽說，今天發佈的是新歌。 聽說，滅火器在【ALIVE系列演唱會】會披露【更多新歌】 4/1晚上8點@Legacy Taipei，一定要來！ 啟售時間預計2月中下旬公布...",
-    //     isSelect: false,
-    //     isFavorite: false
-    // }, {
-    //     _id: "i5LOV6r45i8",
-    //     title: "【ALIVE Live Session】滅火器－基隆路",
-    //     url: "https://www.youtube.com/embed/i5LOV6r45i8",
-    //     image: "http://img.youtube.com/vi/i5LOV6r45i8/0.jpg",
-    //     description: "聽說，今天發佈的是新歌。 聽說，滅火器在【ALIVE系列演唱會】會披露【更多新歌】 4/1晚上8點@Legacy Taipei，一定要來！ 啟售時間預計2月中下旬公布...",
-    //     isSelect: false,
-    //     isFavorite: false
-    // }, {
-    //     _id: "i5LOV6r45i8",
-    //     title: "【ALIVE Live Session】滅火器－基隆路",
-    //     url: "https://www.youtube.com/embed/i5LOV6r45i8",
-    //     image: "http://img.youtube.com/vi/i5LOV6r45i8/0.jpg",
-    //     description: "聽說，今天發佈的是新歌。 聽說，滅火器在【ALIVE系列演唱會】會披露【更多新歌】 4/1晚上8點@Legacy Taipei，一定要來！ 啟售時間預計2月中下旬公布...",
-    //     isSelect: false,
-    //     isFavorite: false
-    // }];
 
     $scope.init = function() {
         $scope.musicLists = loadSearch();
         var favoriteLists = loadFavorite();
+        $scope.favoriteLists = favoriteLists;
         if (favoriteLists)
             $scope.musicLists.forEach(function(m, i) {
                 favoriteLists.forEach(function(f, j) {
@@ -85,6 +59,17 @@ app.controller("MusicPlayerController", function($scope, $timeout, $location, $h
 
     }
 
+    $scope.switchFavorite = function() {
+        $scope.isFavoriteMode = !$scope.isFavoriteMode;
+        if ($scope.isFavoriteMode) {
+            var favoriteLists = loadFavorite();
+            $scope.favoriteLists = favoriteLists;
+            $scope.musicLists = favoriteLists;
+        } else {
+            $scope.init();
+        }
+
+    }
 
     $scope.search = function(query) {
 
@@ -126,7 +111,6 @@ app.controller("MusicPlayerController", function($scope, $timeout, $location, $h
             return getLocalStorge('NTU-ICAN-PLAYER-SEARCH');
         }
 
-
     }
 
     function saveSearch(musicLists) {
@@ -145,6 +129,31 @@ app.controller("MusicPlayerController", function($scope, $timeout, $location, $h
         event.preventDefault();
         event.stopPropagation();
         console.log(musicCard);
+        // playVideoSetting(musicCard);
+
+        playVideoInPlayer(musicCard._id);
+    }
+
+    // function playVideoSetting(musicCard) {
+    //     var toggle = true;
+    //     if (musicCard.isPlayingVideo == true)
+    //         toggle = false;
+
+    //     cleanIsPlaying();
+    //     musicCard.isSelect = toggle;
+
+    // }
+
+    // function cleanIsPlaying() {
+    //     $scope.musicLists.forEach(function(musicCard, i) {
+    //         musicCard.isPlayingVideo = false;
+
+    //     });
+
+    // }
+
+    function playVideoInPlayer(_id) {
+        $scope.currentYoutubeVideo = _id;
 
     }
 
@@ -152,18 +161,28 @@ app.controller("MusicPlayerController", function($scope, $timeout, $location, $h
         event.preventDefault();
         event.stopPropagation();
         musicCard.isFavorite = !musicCard.isFavorite;
-        // saveSearch($scope.musicLists);
 
 
-        var favoriteLists = $scope.musicLists.filter(function(m) {
-            if (m.isFavorite)
-                return m;
-            else
-                return 0;
-        });
-        saveFavorite(favoriteLists);
+
+        // var favoriteLists = $scope.musicLists.filter(function(m) {
+        //     if (m.isFavorite)
+        //         return m;
+        //     else
+        //         return 0;
+        // });
+        if (musicCard.isFavorite)
+            $scope.favoriteLists.push(musicCard);
+        else {
+
+            var idx = $scope.favoriteLists.indexOf(musicCard);
+            $scope.favoriteLists.splice(idx, 1);
+
+        }
 
 
+
+        addMarquee($scope.favoriteLists);
+        saveFavorite($scope.favoriteLists);
 
     }
 

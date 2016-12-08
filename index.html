@@ -33,6 +33,7 @@
     <link rel="stylesheet" href="css/mizUI.css">
     <script src="js/angular.min.js"></script>
     <script src="https://apis.google.com/js/client.js?onload=init"></script>
+    <script src="https://www.youtube.com/iframe_api"></script>
     <script src="js/mizUI.js"></script>
 </head>
 
@@ -50,7 +51,7 @@
         </div>
         <div class="tools">
             <ul>
-                <li aria-label="Click to open my favorite list." class="hint--top"><i class="fa fa-star" aria-hidden="true"></i>My favorite</li>
+                <li aria-label="Click to open my favorite list." ng-class="{'active':isFavoriteMode}" class="hint--top" ng-click="switchFavorite()"><i class="fa fa-star" aria-hidden="true"></i>My favorite</li>
                 <li aria-label="Click to open video player." class="hint--top"><i class="fa fa-youtube-play" aria-hidden="true"></i>Player</li>
             </ul>
         </div>
@@ -107,9 +108,10 @@
         </div>
     </div>
     <div class="miz-main">
-        <div class="myfavorite-container"></div>
-        <div class="video-container">
-            <youtube-video video-id="theBestVideo"></youtube-video>
+        <div  class="video-container">
+            <div class="video">
+                <youtube-video player-vars="playerVars" video-id="currentYoutubeVideo" player="VideoPlayer" player-width="'100%'" player-height="'100%'"></youtube-video>
+            </div>
         </div>
     </div>
 </body>
