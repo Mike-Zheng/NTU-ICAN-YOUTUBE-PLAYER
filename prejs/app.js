@@ -72,7 +72,8 @@ app.controller("MusicPlayerController", function($scope, $timeout, $location, $h
     $scope.init = function() {
         $scope.musicLists = loadSearch();
         var favoriteLists = loadFavorite();
-        $scope.favoriteLists = favoriteLists;
+        if (favoriteLists)
+            $scope.favoriteLists = favoriteLists;
         if (favoriteLists)
             $scope.musicLists.forEach(function(m, i) {
                 favoriteLists.forEach(function(f, j) {
