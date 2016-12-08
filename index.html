@@ -90,7 +90,7 @@
                                     <!-- <i ng-if="!musicCard.isFavorite" class="fa fa-star-o" aria-hidden="true"></i> -->
                                     <i ng-class="{'favorite fa-star':musicCard.isFavorite,'fa-star-o':!musicCard.isFavorite}" class="fa " aria-hidden="true"></i>
                                 </div>
-                                <div class="tool hint--left" aria-label="Play the music+" ng-click="addToPlayerList($event,musicCard)">
+                                <div ng-if="labMode" class="tool hint--left" aria-label="Play the music+" ng-click="addToPlayerList($event,musicCard)">
                                     <div class="circle ">
                                         <i class="fa fa-plus" aria-hidden="true"></i>
                                     </div>
