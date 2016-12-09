@@ -28,6 +28,10 @@ app.controller("MusicPlayerController", function($scope, $timeout, $location, $h
     $scope.favoriteLists = [];
     $scope.labMode = false;
 
+    //broadcasting
+    $scope.broadCasting = false;
+    $scope.broadCast = "";
+
     //標題跑馬燈 Marquee
     $scope.duration = 10000;
 
@@ -63,6 +67,7 @@ app.controller("MusicPlayerController", function($scope, $timeout, $location, $h
                 console.log('on change ' + value);
                 PlayerFactory.setVolume(value).then(function(data) {
                     console.log(data.data);
+                    broadCast("調整音量:" + value);
                 });
             }
         }
@@ -87,10 +92,16 @@ app.controller("MusicPlayerController", function($scope, $timeout, $location, $h
         if ($scope.labMode) {
             //實驗室模式
             //讀取音量
-            PlayerFactory.loadVolume().then(function(data) {
-                console.log(data.data);
-                $scope.slider.value = data.data;
-            });
+            broadCast("WELCOME TO NTU ICAN LAB!");
+            try {
+                PlayerFactory.loadVolume().then(function(data) {
+                    console.log(data.data);
+                    $scope.slider.value = data.data;
+                });
+            } catch (err) {
+                console.log(err);
+                alert("請連結ican-5g wifi");
+            }
 
         }
 
@@ -99,16 +110,23 @@ app.controller("MusicPlayerController", function($scope, $timeout, $location, $h
 
     $scope.switchLabMode = function(event) {
         event.preventDefault();
-        console.log("WELCOME TO NTU ICAN LAB!")
+
         $scope.labMode = !$scope.labMode;
 
         if ($scope.labMode) {
+            console.log("WELCOME TO NTU ICAN LAB!");
+            broadCast("WELCOME TO NTU ICAN LAB!");
             //實驗室模式
             //讀取音量
-            PlayerFactory.loadVolume().then(function(data) {
-                console.log(data.data);
-                $scope.slider.value = data.data;
-            });
+            try {
+                PlayerFactory.loadVolume().then(function(data) {
+                    console.log(data.data);
+                    $scope.slider.value = data.data;
+                });
+            } catch (err) {
+                console.log(err);
+                alert("請連結ican-5g wifi");
+            }
 
         }
     }
@@ -129,12 +147,14 @@ app.controller("MusicPlayerController", function($scope, $timeout, $location, $h
     $scope.labPause = function() {
         PlayerFactory.pause().then(function(data) {
             console.log(data.data);
+            broadCast("停止音樂");
         });
     }
 
     $scope.labStop = function() {
         PlayerFactory.play("").then(function(data) {
             console.log(data.data);
+            broadCast("暫停音樂");
         });
     }
 
@@ -225,6 +245,7 @@ app.controller("MusicPlayerController", function($scope, $timeout, $location, $h
     }
 
     $scope.addToMyFavorite = function(event, musicCard) {
+
         event.preventDefault();
         event.stopPropagation();
         musicCard.isFavorite = !musicCard.isFavorite;
@@ -285,6 +306,7 @@ app.controller("MusicPlayerController", function($scope, $timeout, $location, $h
 
         PlayerFactory.play(musicCard._id).then(function(data) {
             console.log(data.data);
+            broadCast("實驗室播放等待中");
         });
         // console.log(musicCard);
 
@@ -319,6 +341,21 @@ app.controller("MusicPlayerController", function($scope, $timeout, $location, $h
         });
 
     }
+
+
+    function broadCast(message) {
+
+        $scope.broadCasting = true;
+
+        $scope.broadCast = message;
+        $timeout(function() {
+            $scope.broadCasting = false;
+
+            $scope.broadCast = "";
+        }, 3000);
+
+    }
+
 
 });
 

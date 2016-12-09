@@ -121,11 +121,12 @@
             </ul>
         </div>
         <div class="tool-footer">
-            <div ng-if="!searching"><i class="fa fa-search" aria-hidden="true"></i>
+            <div ng-if="!searching&&!broadCasting"><i class="fa fa-search" aria-hidden="true"></i>
                 <span>找到{{musicLists.length}}個搜尋結果</span></div>
-            <div ng-if="searching">
+            <div ng-if="searching&&!broadCasting">
                 <i class="fa fa-circle-o-notch fa-spin fa-3x fa-fw"></i>
                 <span class="sr-only">搜尋中...</span></div>
+            <div ng-if="broadCasting" angular-marquee scroll="broadCasting" duration="duration">{{broadCast}}</div>
         </div>
     </div>
     <div class="miz-main">
