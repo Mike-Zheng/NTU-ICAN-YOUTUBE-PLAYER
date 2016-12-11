@@ -343,7 +343,6 @@ app.factory('PlayerFactory', function($q, $http) {
     };
 
 
-
     _factory.loadVolume = function() {
         var defer = $q.defer();
         $http.get("http://140.112.26.236:80/get_volume")

@@ -109,7 +109,7 @@
                         </div>
                         <div class="card-info" ng-show="musicCard.isSelect" ng-class="{'show':musicCard.isSelect}">
                             <div class="card-info-container">
-                                <div class="card-image" style="background-image: url({{musicCard.image}})"></div>
+                                <div class="card-image" ng-style="{'background-image': 'url({{musicCard.image}})'}"></div>
                                 <div class="card-content">
                                     <h4>{{musicCard.title}}</h4>
                                     <p>{{musicCard.description}}</p>
