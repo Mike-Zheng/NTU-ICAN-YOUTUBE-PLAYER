@@ -6,19 +6,6 @@ app.config(function(localStorageServiceProvider) {
         .setPrefix('NTU-ICAN-PLAYER');
 });
 
-app.directive('pressEnter', function() {
-    return function(scope, element, attrs) {
-        element.bind("keydown keypress", function(event) {
-            if (event.which === 13) {
-                scope.$apply(function() {
-                    scope.$eval(attrs.pressEnter);
-                });
-
-                event.preventDefault();
-            }
-        });
-    };
-});
 app.controller("MusicPlayerController", function($scope, $timeout, $location, $http, PlayerFactory, googleService, localStorageService) {
     $scope.searching = false;
     $scope.musicLists = [];
@@ -31,6 +18,7 @@ app.controller("MusicPlayerController", function($scope, $timeout, $location, $h
     //broadcasting
     $scope.broadCasting = false;
     $scope.broadCast = "";
+    $scope.isbroadCastMarquee = false;
 
     //標題跑馬燈 Marquee
     $scope.duration = 10000;
@@ -66,8 +54,8 @@ app.controller("MusicPlayerController", function($scope, $timeout, $location, $h
             onChange: function(id, value) {
                 console.log('on change ' + value);
                 PlayerFactory.setVolume(value).then(function(data) {
-                    console.log(data.data);
-                    broadCast("調整音量:" + value);
+                    console.log(data);
+                    broadCast("調整音量:" + value, false);
                 });
             }
         }
@@ -92,11 +80,11 @@ app.controller("MusicPlayerController", function($scope, $timeout, $location, $h
         if ($scope.labMode) {
             //實驗室模式
             //讀取音量
-            broadCast("WELCOME TO NTU ICAN LAB!");
+            broadCast("WELCOME TO NTU ICAN LAB!", true);
             try {
                 PlayerFactory.loadVolume().then(function(data) {
-                    console.log(data.data);
-                    $scope.slider.value = data.data;
+                    console.log(data);
+                    $scope.slider.value = data;
                 });
             } catch (err) {
                 console.log(err);
@@ -115,13 +103,13 @@ app.controller("MusicPlayerController", function($scope, $timeout, $location, $h
 
         if ($scope.labMode) {
             console.log("WELCOME TO NTU ICAN LAB!");
-            broadCast("WELCOME TO NTU ICAN LAB!");
+            broadCast("WELCOME TO NTU ICAN LAB!", true);
             //實驗室模式
             //讀取音量
             try {
                 PlayerFactory.loadVolume().then(function(data) {
-                    console.log(data.data);
-                    $scope.slider.value = data.data;
+                    console.log(data);
+                    $scope.slider.value = data;
                 });
             } catch (err) {
                 console.log(err);
@@ -146,15 +134,15 @@ app.controller("MusicPlayerController", function($scope, $timeout, $location, $h
 
     $scope.labPause = function() {
         PlayerFactory.pause().then(function(data) {
-            console.log(data.data);
-            broadCast("停止音樂");
+            console.log(data);
+            broadCast("停止音樂", false);
         });
     }
 
     $scope.labStop = function() {
         PlayerFactory.play("").then(function(data) {
-            console.log(data.data);
-            broadCast("暫停音樂");
+            console.log(data);
+            broadCast("暫停音樂", false);
         });
     }
 
@@ -216,28 +204,11 @@ app.controller("MusicPlayerController", function($scope, $timeout, $location, $h
         event.preventDefault();
         event.stopPropagation();
         console.log(musicCard);
-        // playVideoSetting(musicCard);
+
 
         playVideoInPlayer(musicCard._id);
     }
 
-    // function playVideoSetting(musicCard) {
-    //     var toggle = true;
-    //     if (musicCard.isPlayingVideo == true)
-    //         toggle = false;
-
-    //     cleanIsPlaying();
-    //     musicCard.isSelect = toggle;
-
-    // }
-
-    // function cleanIsPlaying() {
-    //     $scope.musicLists.forEach(function(musicCard, i) {
-    //         musicCard.isPlayingVideo = false;
-
-    //     });
-
-    // }
 
     function playVideoInPlayer(_id) {
         $scope.currentYoutubeVideo = _id;
@@ -252,12 +223,6 @@ app.controller("MusicPlayerController", function($scope, $timeout, $location, $h
 
 
 
-        // var favoriteLists = $scope.musicLists.filter(function(m) {
-        //     if (m.isFavorite)
-        //         return m;
-        //     else
-        //         return 0;
-        // });
         if (musicCard.isFavorite)
             $scope.favoriteLists.push(musicCard);
         else {
@@ -305,10 +270,10 @@ app.controller("MusicPlayerController", function($scope, $timeout, $location, $h
 
 
         PlayerFactory.play(musicCard._id).then(function(data) {
-            console.log(data.data);
-            broadCast("實驗室播放等待中");
+            console.log(data);
+            broadCast("實驗室播放等待中", true);
         });
-        // console.log(musicCard);
+
 
     }
 
@@ -343,9 +308,10 @@ app.controller("MusicPlayerController", function($scope, $timeout, $location, $h
     }
 
 
-    function broadCast(message) {
+    function broadCast(message, isMarquee) {
 
         $scope.broadCasting = true;
+        $scope.isbroadCastMarquee = isMarquee;
 
         $scope.broadCast = message;
         $timeout(function() {
@@ -361,26 +327,62 @@ app.controller("MusicPlayerController", function($scope, $timeout, $location, $h
 
 app.factory('PlayerFactory', function($q, $http) {
 
+
     var _factory = {};
     _factory.play = function(id) {
-        return $http.get("http://140.112.26.236:80/music?id=" + id);
+        var defer = $q.defer();
+        $http.get("http://140.112.26.236:80/music?id=" + id)
+            .then(function(response) {
+                _factory.data = response.data;
+                defer.resolve(_factory.data);
+            }, function(response) {
+                alert("請連結NTUI CAN LAB wifi，或是伺服器錯誤。");
+                defer.reject(_factory.data);
+            });
+        return defer.promise;
     };
+
+
+
     _factory.loadVolume = function() {
-        return $http.get("http://140.112.26.236:80/get_volume");
+        var defer = $q.defer();
+        $http.get("http://140.112.26.236:80/get_volume")
+            .then(function(response) {
+                _factory.data = response.data;
+                defer.resolve(_factory.data);
+            }, function(response) {
+                alert("請連結NTUI CAN LAB wifi，或是伺服器錯誤。");
+                defer.reject(_factory.data);
+            });
+        return defer.promise;
     };
+
     _factory.setVolume = function(range) {
-        return $http.get("http://140.112.26.236:80/set_volume?volume=" + range);
+        var defer = $q.defer();
+        $http.get("http://140.112.26.236:80/set_volume?volume=" + range)
+            .then(function(response) {
+                _factory.data = response.data;
+                defer.resolve(_factory.data);
+            }, function(response) {
+                alert("請連結NTUI CAN LAB wifi，或是伺服器錯誤。");
+                defer.reject(_factory.data);
+            });
+        return defer.promise;
     };
     _factory.pause = function() {
-        return $http.get("http://140.112.26.236:80/pause_and_play");
+        var defer = $q.defer();
+        $http.get("http://140.112.26.236:80/pause_and_play")
+            .then(function(response) {
+                _factory.data = response.data;
+                defer.resolve(_factory.data);
+            }, function(response) {
+                alert("請連結NTUI CAN LAB wifi，或是伺服器錯誤。");
+                defer.reject(_factory.data);
+            });
+        return defer.promise;
     };
 
 
-    // _factory.acceptInivte = function(inviteId) {
-    //     return $http.post("/api/invite/accept", {
-    //         id: inviteId
-    //     });
-    // };
 
 
 
@@ -390,15 +392,7 @@ app.factory('PlayerFactory', function($q, $http) {
 app.factory('googleService', function($q, $http) {
 
     var _factory = {};
-    _factory.listInvites = function(projectId) {
-        return $http.get("/api/invite/list-invites?projectId=" + projectId);
-    };
 
-    _factory.acceptInivte = function(inviteId) {
-        return $http.post("/api/invite/accept", {
-            id: inviteId
-        });
-    };
 
     _factory.googleApiClientReady = function(query) {
         var deferred = $q.defer();
@@ -422,40 +416,16 @@ app.factory('googleService', function($q, $http) {
     return _factory;
 });
 
+app.directive('pressEnter', function() {
+    return function(scope, element, attrs) {
+        element.bind("keydown keypress", function(event) {
+            if (event.which === 13) {
+                scope.$apply(function() {
+                    scope.$eval(attrs.pressEnter);
+                });
 
-
-var debounce = function(func, wait) {
-    // we need to save these in the closure
-    var timeout, args, context, timestamp;
-
-    return function() {
-
-        // save details of latest call
-        context = this;
-        args = [].slice.call(arguments, 0);
-        timestamp = new Date();
-
-        // this is where the magic happens
-        var later = function() {
-
-            // how long ago was the last call
-            var last = (new Date()) - timestamp;
-
-            // if the latest call was less that the wait period ago
-            // then we reset the timeout to wait for the difference
-            if (last < wait) {
-                timeout = setTimeout(later, wait - last);
-
-                // or if not we can null out the timer and run the latest
-            } else {
-                timeout = null;
-                func.apply(context, args);
+                event.preventDefault();
             }
-        };
-
-        // we only need to set the timer now if one isn't already running
-        if (!timeout) {
-            timeout = setTimeout(later, wait);
-        }
-    }
-};
+        });
+    };
+});
