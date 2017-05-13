@@ -21,7 +21,7 @@ app.controller("MusicPlayerController", function($scope, $timeout, $location, $h
     $scope.isbroadCastMarquee = false;
 
     //標題跑馬燈 Marquee
-    $scope.duration = 10000;
+    $scope.duration = 4000;
 
     function addMarquee(musicLists) {
         if (musicLists && musicLists.length > 0)
@@ -70,6 +70,7 @@ app.controller("MusicPlayerController", function($scope, $timeout, $location, $h
         if (favoriteLists)
             $scope.musicLists.forEach(function(m, i) {
                 favoriteLists.forEach(function(f, j) {
+
                     if (m._id == f._id) m.isFavorite = true;
                 });
             });
@@ -119,10 +120,15 @@ app.controller("MusicPlayerController", function($scope, $timeout, $location, $h
         }
     }
 
-    $scope.switchFavorite = function() {
-        $scope.isFavoriteMode = !$scope.isFavoriteMode;
+    $scope.switchFavorite = function(isFavoriteMode) {
+        $scope.isFavoriteMode = isFavoriteMode;
         if ($scope.isFavoriteMode) {
             var favoriteLists = loadFavorite();
+            if (favoriteLists && favoriteLists.length > 0)
+                favoriteLists.forEach(function(m, i) {
+                    m.isSelect = false;
+                });
+
             $scope.favoriteLists = favoriteLists;
             $scope.musicLists = favoriteLists;
         } else {
@@ -150,21 +156,21 @@ app.controller("MusicPlayerController", function($scope, $timeout, $location, $h
 
         $scope.musicLists = [];
         $scope.searching = true;
-        googleService.googleApiClientReady(query).then(function(data) {
+        googleService.youtubeSearch(query).then(function(data) {
 
             if (data.items) {
                 data.items.forEach(function(item, i) {
-                    if (item['id']['videoId']) {
-                        var musicCard = {};
-                        musicCard._id = item['id']['videoId'];
-                        musicCard.title = item['snippet']['title'];
-                        musicCard.url = "https://www.youtube.com/embed/" + musicCard._id;
-                        musicCard.image = "http://img.youtube.com/vi/" + musicCard._id + "/0.jpg";
-                        musicCard.description = item['snippet']['description'];
-                        musicCard.isSelect = false;
-                        musicCard.isFavorite = false;
-                        $scope.musicLists.push(musicCard);
-                    }
+
+                    var musicCard = {};
+                    musicCard._id = item['id']['videoId'];
+                    musicCard.title = item['snippet']['title'];
+                    musicCard.url = "https://www.youtube.com/embed/" + musicCard._id;
+                    musicCard.image = "http://img.youtube.com/vi/" + musicCard._id + "/0.jpg";
+                    musicCard.description = item['snippet']['description'];
+                    musicCard.isSelect = false;
+                    musicCard.isFavorite = false;
+                    $scope.musicLists.push(musicCard);
+
                 });
 
 
@@ -179,6 +185,41 @@ app.controller("MusicPlayerController", function($scope, $timeout, $location, $h
 
     }
 
+    function convert_time(duration) {
+        var a = duration.match(/\d+/g);
+
+        if (duration.indexOf('M') >= 0 && duration.indexOf('H') == -1 && duration.indexOf('S') == -1) {
+            a = [0, a[0], 0];
+        }
+
+        if (duration.indexOf('H') >= 0 && duration.indexOf('M') == -1) {
+            a = [a[0], 0, a[1]];
+        }
+        if (duration.indexOf('H') >= 0 && duration.indexOf('M') == -1 && duration.indexOf('S') == -1) {
+            a = [a[0], 0, 0];
+        }
+
+        duration = 0;
+
+        if (a.length == 3) {
+            duration = duration + parseInt(a[0]) * 3600;
+            duration = duration + parseInt(a[1]) * 60;
+            duration = duration + parseInt(a[2]);
+        }
+
+        if (a.length == 2) {
+            duration = duration + parseInt(a[0]) * 60;
+            duration = duration + parseInt(a[1]);
+        }
+
+        if (a.length == 1) {
+            duration = duration + parseInt(a[0]);
+        }
+        var h = Math.floor(duration / 3600);
+        var m = Math.floor(duration % 3600 / 60);
+        var s = Math.floor(duration % 3600 % 60);
+        return ((h > 0 ? h + ":" + (m < 10 ? "0" : "") : "") + m + ":" + (s < 10 ? "0" : "") + s);
+    }
 
     function loadSearch() {
         console.log("讀取上次搜尋狀態..");
@@ -220,8 +261,6 @@ app.controller("MusicPlayerController", function($scope, $timeout, $location, $h
         event.preventDefault();
         event.stopPropagation();
         musicCard.isFavorite = !musicCard.isFavorite;
-
-
 
         if (musicCard.isFavorite)
             $scope.favoriteLists.push(musicCard);
@@ -393,14 +432,15 @@ app.factory('googleService', function($q, $http) {
     var _factory = {};
 
 
-    _factory.googleApiClientReady = function(query) {
+    _factory.youtubeSearch = function(query) {
         var deferred = $q.defer();
 
         gapi.client.load('youtube', 'v3', function() {
             gapi.client.setApiKey('AIzaSyCRwMuGP50aOvrptyXRZtveE50faOLb8R0');
             var request = gapi.client.youtube.search.list({
-                part: 'snippet',
+                part: 'snippet,id',
                 q: query,
+                type: 'video',
                 maxResults: 24
             });
             request.execute(function(response) {
@@ -408,9 +448,48 @@ app.factory('googleService', function($q, $http) {
                 deferred.resolve(response.result);
             });
         });
+        return deferred.promise;
+    };
+    _factory.youtubeSearchWithContent = function(query) {
+        var deferred = $q.defer();
+
+        gapi.client.load('youtube', 'v3', function() {
+            gapi.client.setApiKey('AIzaSyCRwMuGP50aOvrptyXRZtveE50faOLb8R0');
+            var request = gapi.client.youtube.search.list({
+                part: 'snippet,id',
+                q: query,
+                type: 'video',
+                maxResults: 24
+            });
+            request.execute(function(response) {
+                var searchResults = { items: [] };
+                response.result.items.forEach(function(data, i) {
+                    var url1 = "https://www.googleapis.com/youtube/v3/videos?id=" + data.id.videoId + "&key=AIzaSyCRwMuGP50aOvrptyXRZtveE50faOLb8R0&part=snippet,contentDetails";
+                    $.ajax({
+                        async: false,
+                        type: 'GET',
+                        url: url1,
+                        success: function(data) {
+                            if (data.items.length > 0) {
+                                console.log(data.items[0]);
+                                // var output = getResults(data.items[0]);
+                                searchResults.items.push(data.items[0]);
+                                // $('#results').append(output);
+                            }
+                        }
+                    });
+                });
+
+                // deferred.resolve(response.result);
+                deferred.resolve(searchResults);
+
+            });
+        });
 
         return deferred.promise;
     };
+
+
 
     return _factory;
 });

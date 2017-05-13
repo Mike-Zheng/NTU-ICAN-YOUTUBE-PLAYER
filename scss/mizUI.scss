@@ -117,7 +117,7 @@ body {
 
 .search-area {
     position: relative;
-    height: 100px;
+    height: 70px;
     width: 500px;
     // @include pc-width{}
     // @include pad-width() {}
@@ -133,7 +133,7 @@ body {
     position: absolute;
     left: 50%;
     transform: translateX(-50%);
-    padding: 30px 0;
+    padding: 15px 0;
 }
 
 .tools {
@@ -153,7 +153,9 @@ body {
             padding: 0 20px;
             line-height: 40px;
             &.active {
-                color: #FDBA1C;
+                // color: #FDBA1C;
+                // color:$color_select;
+                color: $white;
             }
             @include transition(color 100ms ease-in);
             i {
@@ -161,9 +163,10 @@ body {
             }
             &:hover {
                 color: $white;
-                &.active {
-                    color: #FDBA1C;
-                }
+                // color: $color_select;
+                // &.active {
+                //     color: #FDBA1C;
+                // }
             }
         }
     }
@@ -243,10 +246,10 @@ body {
     .spin {
         width: 100%;
         text-align: center;
-        line-height: calc(100vh - 180px);
-        height: calc(100vh - 180px);
+        line-height: calc(100vh - 150px);
+        height: calc(100vh - 150px);
         &.lab-mode {
-            height: calc(100vh - 265px);
+            height: calc(100vh - 235px);
         }
         i {
             color: #c0c0c0;
@@ -257,12 +260,12 @@ body {
         padding: 0;
         margin: 0;
         // height: 100%;
-        height: calc(100vh - 180px);
+        height: calc(100vh - 150px);
         -webkit-overflow-scrolling: touch;
         /* lets it scroll lazy */
         overflow-y: scroll;
         &.lab-mode {
-            height: calc(100vh - 265px);
+            height: calc(100vh - 235px);
         }
         &::-webkit-scrollbar {
             width: 9px;
@@ -286,7 +289,7 @@ body {
             color: #8B8B91;
             // display: inline-block;
             // padding: 0 20px;
-            line-height: 40px;
+            // line-height: 40px;
             @include transition(color 100ms ease-in);
             // &:hover {
             //     color: $white;
@@ -297,6 +300,7 @@ body {
 
 .music-card {
     .card-line {
+        @include box-shadow( 0 2px 4px rgba(0, 0, 0, .5));
         cursor: pointer;
         position: relative;
         width: 100%;
@@ -315,6 +319,7 @@ body {
                 }
             }
             .card-tools {
+                background-color: $color_select;
                 .tool {
                     i {
                         color: $white;
@@ -344,13 +349,14 @@ body {
         .title {
             margin-left: 60px;
             display: inline-block;
-            width: 50%;
+            // width: 50%;
+            width: calc(100% - 165px);
             // @include pc-width{}
             // @include pad-width() {}
             // @include small-pad-width() {}
-            @include phone-width() {
-                width: 40%;
-            }
+            // @include phone-width() {
+            //     width: 40%;
+            // }
             // height: 100%;
             line-height: 60px;
             height: 60px;
@@ -360,6 +366,7 @@ body {
                 margin: 0;
                 color: #DDD;
                 font-weight: 400;
+                width: 80%;
             }
             h4 {
                 padding: 0;
@@ -373,7 +380,8 @@ body {
             position: absolute;
             right: 0;
             // width: 160px;
-            height: 100%;
+            height: 99%;
+            background-color: $color_main;
             .tool {
                 vertical-align: middle;
                 display: inline-block;
@@ -400,11 +408,12 @@ body {
                     border-radius: 100%;
                     vertical-align: middle;
                     line-height: 30px;
-                    @include box-shadow( 0 2px 4px rgba(0, 0, 0, .5));
+                    // @include box-shadow( 0 2px 4px rgba(0, 0, 0, .5));
                     i {
                         font-size: 16px;
                         color: $color_main;
                         text-shadow: none;
+                        vertical-align: initial;
                     }
                     &:hover,
                     &.act {
@@ -477,7 +486,7 @@ body {
                 width: 50%;
                 /* padding: 27px; */
                 /* border: #FFF solid 20px; */
-                box-shadow: inset 0 0 40px 0px #313741;
+                box-shadow: inset 0 0 40px 0px $color_main;
                 display: inline-block;
                 background-repeat: no-repeat;
                 background-position: center;
@@ -541,6 +550,17 @@ body {
     .video-container {
         height: 100vh;
         .video {
+            @include phone-width() {
+                position: fixed;
+                z-index: 400;
+                height: 50px;
+                width: 50%;
+                bottom: 25px;
+                margin: 0;
+                padding-bottom: 100px;
+                right: 0px;
+                border-radius: 2px;
+            }
             position: relative;
             width: 100%;
             margin: 10px 2%;

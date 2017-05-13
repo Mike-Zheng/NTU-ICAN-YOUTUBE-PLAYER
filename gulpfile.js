@@ -62,6 +62,3 @@ gulp.task('default', ['connect','css','js' ], function() {
     gulp.watch('./scss/**/**.scss', ['css']);
     gulp.watch('./prejs/**/**.js', ['js']);
 });
-
-
-

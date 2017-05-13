@@ -55,8 +55,8 @@
         </div>
         <div class="tools">
             <ul>
-                <li aria-label="Click to open my favorite list." ng-class="{'active':isFavoriteMode}" class="hint--top" ng-click="switchFavorite()"><i class="fa fa-star" aria-hidden="true"></i>My favorite</li>
-                <li aria-label="Click to open video player." class="hint--top"><i class="fa fa-youtube-play" aria-hidden="true"></i>Player</li>
+                <li aria-label="Click to open my favorite list." ng-class="{'active':isFavoriteMode}" class="hint--top" ng-click="switchFavorite(true)"><i class="fa fa-star" aria-hidden="true"></i>My favorite</li>
+                <li aria-label="Click to search result." ng-class="{'active':!isFavoriteMode}" ng-click="switchFavorite(false)" class="hint--top"><i class="fa fa-youtube-play" aria-hidden="true"></i>Search result</li>
             </ul>
         </div>
         <div class="music-cards">
