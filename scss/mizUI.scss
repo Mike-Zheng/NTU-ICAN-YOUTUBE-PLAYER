@@ -300,7 +300,7 @@ body {
 
 .music-card {
     .card-line {
-        @include box-shadow( 0 2px 4px rgba(0, 0, 0, .5));
+        @include box-shadow( 1px 0px 1px rgba(0, 0, 0, .4));
         cursor: pointer;
         position: relative;
         width: 100%;
