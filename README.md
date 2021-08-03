@@ -9,9 +9,9 @@
 
 ## What is NTU-ICAN-YOUTUBE-PLAYER?
 
-- **Enjoy Together** - NTU-ICAN-YOUTUBE-PLAYER is an online music player that can help all members of the laboratory share music.
+- **Enjoy Together** - NTU-ICAN-YOUTUBE-PLAYER is an online music player base on youtube api. It can help members in lab share music.
 
-- **Simple to Use** - Searching for music based on youtube is easy. And provide a collection function.
+- **Simple To Use** - It's easy to search music and provide collection methods.
 
 - **Feature** - Members can play/pause, volum up/down the music in time.
 
